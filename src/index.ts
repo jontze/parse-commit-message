@@ -1,17 +1,16 @@
-import mixinDeep from 'mixin-deep';
+import { produce } from "immer";
 
-import mentions from './plugins/mentions.js';
-import increment from './plugins/increment.js';
-import isBreakingChange from './plugins/is-breaking-change.js';
+import { mentionsPlugin as mentions } from "./plugins/mention.js";
+import { incrementPlugin as increment } from "./plugins/increment.js";
+import { isBreakingChangePlugin as isBreakingChange } from "./plugins/is-breaking-change.js";
+import {
+  PluginFunction,
+  SharedOptions,
+  PossibleCommit,
+  Commit,
+} from "./index.js";
 
-// import { Commit, Plugin, Plugins, PossibleCommit } from '../types';
-// 'chore(some): foo bar baz' -> { type: 'chore', scope: 'some', subject: 'foo bar baz' }
-// for some freaking reason it does NOT report `toArray` as unused
-// both typescript and eslint are playing some weird games today
-
-export * from './utils.js';
-
-// export * from '../types';
+export * from "./types.js";
 
 /**
  * Apply a set of `plugins` over all of the given `commits`.
@@ -83,34 +82,40 @@ export * from './utils.js';
  * @returns {Array<Commit>} plus the modified or added properties from each function in `plugins`
  * @public
  */
-export function applyPlugins(plugins, commits, options) {
+export const applyPlugins = (
+  plugins: PluginFunction[],
+  commits: string[] | PossibleCommit,
+  options: SharedOptions,
+): Commit[] => {
   const opts = { caseSensitive: false, normalize: true, ...options };
-  // because some freaking weird things is happening
-  // and it does report `toArray` as "cannot find name" by typescript
-  // and as "no undef" by eslint.
-  const arr = [];
-  const cmts = [];
-  const plgs = arr.concat(plugins).filter(Boolean);
 
-  return cmts
-    .concat(commits)
-    .filter(Boolean)
-    .reduce((result, commit) => {
-      let commitObject = {};
+  const extendCommitCb = (singleCommitLike: string | Commit): Commit => {
+    let commitObject = {};
+    if (typeof singleCommitLike === "string") {
+      commitObject = { header: { value: singleCommitLike } };
+    } else if (typeof singleCommitLike === "object") {
+      commitObject = singleCommitLike;
+    }
 
-      if (typeof commit === 'string') {
-        commitObject = { header: { value: commit } };
-      } else if (typeof commit === 'object' && !Array.isArray(commit)) {
-        commitObject = commit;
-      }
-      const cmt = plgs.reduce((acc, fn) => {
-        const res = fn(acc, opts);
-        return mixinDeep(acc, res);
-      }, commitObject);
+    const extendedCommitObject = plugins.reduce<Commit>((acc, pluginFn) => {
+      const res = pluginFn(acc, opts);
+      return produce(acc, (draft) => {
+        Object.assign(draft, res);
+      });
+    }, commitObject as Commit);
+    return extendedCommitObject;
+  };
 
-      return result.concat(cmt);
-    }, []);
-}
+  if (Array.isArray(commits)) {
+    return ([] as Commit[]).concat(
+      commits.reduce<Commit[]>((result, commit) => {
+        return result.concat(extendCommitCb(commit));
+      }, []),
+    );
+  } else {
+    return ([] as Commit[]).concat(extendCommitCb(commits));
+  }
+};
 
 /**
  * An array which includes `mentions`, `isBreakingChange` and `increment` built-in plugins.
@@ -167,7 +172,11 @@ export function applyPlugins(plugins, commits, options) {
  * @name .plugins
  * @public
  */
-export const plugins = [mentions, increment, isBreakingChange];
+export const plugins: PluginFunction[] = [
+  mentions,
+  increment,
+  isBreakingChange,
+];
 
 /**
  * An object (named set) which includes `mentions` and `increment` built-in plugins.
@@ -207,17 +216,4 @@ export const mappers = {
   isBreakingChange,
 };
 
-export { parse, validate } from './main.js';
-export { stringify, check } from './main.js';
-export {
-  parseHeader,
-  stringifyHeader,
-  checkHeader,
-  validateHeader,
-} from './header.js';
-export {
-  parseCommit,
-  stringifyCommit,
-  checkCommit,
-  validateCommit,
-} from './commit.js';
+export { parse, validate, stringify, check } from "./main.js";

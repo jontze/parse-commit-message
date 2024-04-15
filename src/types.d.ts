@@ -1,8 +1,15 @@
-export interface CommitResult {
-  error?: Error;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value?: any;
+export interface SharedOptions {
+  headerRegex?: RegExp | string;
+  caseSensitive?: boolean;
 }
+
+export interface CommitResult<TValue = any> {
+  error?: unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value?: TValue;
+}
+
+export type PluginFunction = (commit: Commit, options: SharedOptions) => Commit;
 
 export interface Mention {
   index: number;

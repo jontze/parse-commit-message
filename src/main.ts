@@ -1,5 +1,11 @@
-import { parseCommit, stringifyCommit, checkCommit } from './commit.js';
-import { toArray, errorMsg } from './utils.js';
+import { parseCommit, stringifyCommit, checkCommit } from "./commit.js";
+import {
+  Commit,
+  CommitResult,
+  PossibleCommit,
+  SharedOptions,
+} from "./types.js";
+import { toArray, errorMsg } from "./utils.js";
 
 /**
  * Receives and parses a single or multiple commit message(s) in form of string,
@@ -46,16 +52,18 @@ import { toArray, errorMsg } from './utils.js';
  * @param {RegExp|string} options.headerRegex string regular expression or instance of RegExp
  * @param {boolean} options.caseSensitive whether or not to be case sensitive, defaults to `false`
  * @returns {Array<Commit>} if array of commit objects
- * @public
  */
-export function parse(commits, options) {
+export const parse = (
+  commits: PossibleCommit,
+  options: { headerRegex: RegExp | string; caseSensitive: boolean },
+): Commit[] => {
   const result = toArray(commits)
     .filter(Boolean)
-    .reduce((acc, val) => {
-      if (typeof val === 'string') {
+    .reduce<Commit[]>((acc, val) => {
+      if (typeof val === "string") {
         return acc.concat(parseCommit(val, options));
       }
-      if (typeof val === 'object' && !Array.isArray(val)) {
+      if (typeof val === "object" && !Array.isArray(val)) {
         return acc.concat(val);
       }
 
@@ -63,7 +71,7 @@ export function parse(commits, options) {
     }, []);
 
   return result;
-}
+};
 
 /**
  * Receives a `Commit` object, validates it using `validate`,
@@ -98,24 +106,24 @@ export function parse(commits, options) {
  * @returns {Array<string>} an array of commit strings like `'fix(foo): bar baz'`
  * @public
  */
-export function stringify(commits, options) {
+export const stringify = (commits: PossibleCommit, options: SharedOptions) => {
   const result = toArray(commits)
     .filter(Boolean)
-    .reduce(
+    .reduce<string[]>(
       (acc, val) =>
         acc.concat(
           toArray(
             check(
-              typeof val === 'string' ? { header: { value: val } } : val,
+              typeof val === "string" ? { header: { value: val } } : val,
               options,
             ),
-          ).map((x) => stringifyCommit(x, options)),
+          ).map((x) => stringifyCommit(x)),
         ),
       [],
     );
 
   return result;
-}
+};
 
 /**
  * Validates a single or multiple commit message(s) in form of string,
@@ -176,10 +184,12 @@ export function stringify(commits, options) {
  * @param {RegExp|string} options.headerRegex string regular expression or instance of RegExp
  * @param {boolean} options.caseSensitive whether or not to be case sensitive, defaults to `false`
  * @returns {CommitResult} an object like `{ value: Array<Commit>, error: Error }`
- * @public
  */
-export function validate(commits, options) {
-  const result = {};
+export function validate(
+  commits: PossibleCommit,
+  options: SharedOptions,
+): CommitResult<Commit[]> {
+  const result: CommitResult = {};
 
   try {
     result.value = check(commits, options);
@@ -220,16 +230,18 @@ export function validate(commits, options) {
  * @param {RegExp|string} options.headerRegex string regular expression or instance of RegExp
  * @param {boolean} options.caseSensitive whether or not to be case sensitive, defaults to `false`
  * @returns {Array<Commit>} returns the same as given if no problems, otherwise it will throw;
- * @public
  */
-export function check(commits, options) {
-  const result = toArray(commits).reduce((acc, commit) => {
-    if (typeof commit === 'string') {
+export const check = (
+  commits: PossibleCommit,
+  options: SharedOptions,
+): Commit[] => {
+  const result = toArray(commits).reduce<Commit[]>((acc, commit) => {
+    if (typeof commit === "string") {
       // eslint-disable-next-line no-param-reassign
       commit = parseCommit(commit, options);
     }
 
-    return acc.concat(checkCommit(commit, options));
+    return acc.concat(checkCommit(commit));
   }, []);
 
   if (result.length === 0) {
@@ -237,4 +249,4 @@ export function check(commits, options) {
   }
 
   return result;
-}
+};

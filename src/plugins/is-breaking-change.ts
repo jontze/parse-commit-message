@@ -1,6 +1,5 @@
-// import mixinDeep from 'mixin-deep';
-
-import { normalizeCommit, /* cleaner, */ isBreakingChange } from '../utils.js';
+import { Commit, PluginFunction, SharedOptions } from "../types.js";
+import { normalizeCommit, isBreakingChange } from "../utils.js";
 
 /**
  * A plugin that adds `isBreakingChange` and `isBreaking` (_deprecated_) properties
@@ -25,19 +24,18 @@ import { normalizeCommit, /* cleaner, */ isBreakingChange } from '../utils.js';
  * @param {RegExp|string} options.headerRegex string regular expression or instance of RegExp
  * @param {boolean} options.caseSensitive whether or not to be case sensitive, defaults to `false`
  * @returns {Commit} plus `{ isBreakingChange: boolean }`
- * @public
  */
-export default function isBreakingChangePlugin(commit, options) {
+export const isBreakingChangePlugin: PluginFunction = (
+  commit: Commit,
+  options: SharedOptions,
+): Commit => {
   const opts = { normalize: true, ...options };
   const cmt = opts.normalize ? normalizeCommit(commit, opts) : commit;
   const isBreaking = isBreakingChange(cmt);
 
   return {
+    ...commit,
     isBreakingChange: isBreaking,
     isBreaking, // ! deprecated
   };
-  // return mixinDeep(cleaner(cmt), {
-  //   isBreakingChange: isBreaking,
-  //   isBreaking, // ! deprecated
-  // });
-}
+};

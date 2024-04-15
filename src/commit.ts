@@ -1,5 +1,6 @@
-import { isValidString } from './utils.js';
-import { parseHeader, stringifyHeader, validateHeader } from './header.js';
+import { isNonEmptyString } from "./utils.js";
+import { parseHeader, stringifyHeader, validateHeader } from "./header.js";
+import { Commit, CommitResult, SharedOptions } from "./types.js";
 
 /**
  * Receives a full commit message `string` and parses it into an `Commit` object
@@ -30,16 +31,16 @@ import { parseHeader, stringifyHeader, validateHeader } from './header.js';
  * @returns {Commit} a standard object like `{ header: Header, body?, footer? }`
  * @public
  */
-export function parseCommit(commit, options) {
-  if (!isValidString(commit)) {
+export const parseCommit = (commit: string, options: SharedOptions): Commit => {
+  if (!isNonEmptyString(commit)) {
     throw new TypeError(`expect \`commit\` to be non empty string`);
   }
 
   const header = parseHeader(commit, options);
-  const [body = null, footer = null] = commit.split('\n\n').slice(1);
+  const [body = null, footer = null] = commit.split("\n\n").slice(1);
 
   return { header, body, footer };
-}
+};
 
 /**
  * Receives a `Commit` object, validates it using `validateCommit`,
@@ -64,23 +65,23 @@ export function parseCommit(commit, options) {
  * @returns {string} a commit nessage stirng like `'fix(foo): bar baz'`
  * @public
  */
-export function stringifyCommit(commit, options) {
-  const result = validateCommit(commit, options);
+export const stringifyCommit = (commit: Commit): string => {
+  const result = validateCommit(commit);
 
   if (result.error) {
     throw result.error;
   }
 
-  const header = stringifyHeader(result.value.header, options);
-  const EOL = '\n';
+  const header = stringifyHeader(result.value.header);
+  const EOL = "\n";
 
-  result.value.body = result.value.body ? EOL + EOL + result.value.body : '';
+  result.value.body = result.value.body ? EOL + EOL + result.value.body : "";
   result.value.footer = result.value.footer
     ? EOL + EOL + result.value.footer
-    : '';
+    : "";
 
   return `${header}${result.value.body}${result.value.footer}`;
-}
+};
 
 /**
  * Validates given `Commit` object and returns `CommitResult`.
@@ -114,17 +115,17 @@ export function stringifyCommit(commit, options) {
  * @returns {CommitResult} an object like `{ value: Array<Commit>, error: Error }`
  * @public
  */
-export function validateCommit(commit, options) {
-  const result = {};
+export const validateCommit = (commit: Commit): CommitResult => {
+  const result: CommitResult = {};
 
   try {
-    result.value = checkCommit(commit, options);
+    result.value = checkCommit(commit);
   } catch (err) {
     return { error: err };
   }
 
   return result;
-}
+};
 
 /**
  * Receives a `Commit` and checks if it is valid. Method throws if problems found.
@@ -152,31 +153,33 @@ export function validateCommit(commit, options) {
  * @param {RegExp|string} options.headerRegex string regular expression or instance of RegExp
  * @param {boolean} options.caseSensitive whether or not to be case sensitive, defaults to `false`
  * @returns {Commit} returns the same as given if no problems, otherwise it will throw.
- * @public
  */
-export function checkCommit(commit, options) {
-  const { error, value: headerObj } = validateHeader(commit.header, options);
+export const checkCommit = (commit: Commit): Commit => {
+  const { error, value: headerObj } = validateHeader(commit.header);
   if (error) {
     throw error;
   }
+  if (headerObj == null) {
+    throw new TypeError("Header in commit is undefined");
+  }
 
   const isValidBody =
-    'body' in commit && commit.body !== null
-      ? typeof commit.body === 'string'
+    "body" in commit && commit.body !== null
+      ? typeof commit.body === "string"
       : true;
 
   if (!isValidBody) {
-    throw new TypeError('commit.body should be string when given');
+    throw new TypeError("commit.body should be string when given");
   }
 
   const isValid =
-    'footer' in commit && commit.footer !== null
-      ? typeof commit.footer === 'string'
+    "footer" in commit && commit.footer !== null
+      ? typeof commit.footer === "string"
       : true;
 
   if (!isValid) {
-    throw new TypeError('commit.footer should be string when given');
+    throw new TypeError("commit.footer should be string when given");
   }
 
   return { body: null, footer: null, ...commit, header: headerObj };
-}
+};
