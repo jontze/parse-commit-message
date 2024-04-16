@@ -8,9 +8,7 @@ import {
   SharedOptions,
   PossibleCommit,
   Commit,
-} from "./index.js";
-
-export * from "./types.js";
+} from "./types.js";
 
 /**
  * Apply a set of `plugins` over all of the given `commits`.

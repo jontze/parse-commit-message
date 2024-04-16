@@ -55,7 +55,7 @@ import { toArray, errorMsg } from "./utils.js";
  */
 export const parse = (
   commits: PossibleCommit,
-  options: { headerRegex: RegExp | string; caseSensitive: boolean },
+  options: SharedOptions = {},
 ): Commit[] => {
   const result = toArray(commits)
     .filter(Boolean)

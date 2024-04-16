@@ -39,7 +39,7 @@ export const parseCommit = (commit: string, options: SharedOptions): Commit => {
   const header = parseHeader(commit, options);
   const [body = null, footer = null] = commit.split("\n\n").slice(1);
 
-  return { header, body, footer };
+  return { header, body: body?.trim(), footer: footer?.trim() };
 };
 
 /**
