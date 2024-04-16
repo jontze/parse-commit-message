@@ -6,7 +6,7 @@ module.exports = {
   coverageDirectory: "<rootDir>/coverage",
   collectCoverageFrom: ["<rootDir>/src/**/*.ts"],
   testPathIgnorePatterns: ["<rootDir>/node_modules"],
-  coverageReporters: ["lcov", "html"],
+  coverageReporters: ["lcov", "html", "text-summary", "text"],
   testMatch: ["<rootDir>/test/**/*.ts"],
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1", // Redirects JS imports to TS files in development
