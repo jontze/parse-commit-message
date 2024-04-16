@@ -145,7 +145,7 @@ _See the [.plugins](#plugins) and [.mappers](#mappers) examples._
 #### Examples
 
 ```js
-import { mappers, plugins } from 'parse-commit-message';
+import { mappers, plugins } from "parse-commit-message";
 
 console.log(mappers.isBreakingChange); // => [Function: isBreakingChangePlugin]
 console.log(plugins[2]); // => [Function: isBreakingChangePlugin]
@@ -188,7 +188,7 @@ _See the [.plugins](#plugins) and [.mappers](#mappers) examples._
 #### Examples
 
 ```js
-import { mappers, plugins } from 'parse-commit-message';
+import { mappers, plugins } from "parse-commit-message";
 
 console.log(mappers.mentions); // => [Function: mentionsPlugin]
 console.log(plugins[0]); // => [Function: mentionsPlugin]
@@ -232,7 +232,7 @@ with `ret` option set to `true`._
 #### Examples
 
 ```js
-import { parseHeader } from 'parse-commit-message';
+import { parseHeader } from "parse-commit-message";
 
 const longCommitMsg = `fix: bar qux
 
@@ -276,9 +276,9 @@ function(header, options)
 #### Examples
 
 ```js
-import { stringifyHeader } from 'parse-commit-message';
+import { stringifyHeader } from "parse-commit-message";
 
-const headerStr = stringifyCommit({ type: 'foo', subject: 'bar qux' });
+const headerStr = stringifyCommit({ type: "foo", subject: "bar qux" });
 console.log(headerStr); // => 'foo: bar qux'
 ```
 
@@ -315,9 +315,9 @@ function(header, options)
 #### Examples
 
 ```js
-import { validateHeader } from 'parse-commit-message';
+import { validateHeader } from "parse-commit-message";
 
-const header = { type: 'foo', subject: 'bar qux' };
+const header = { type: "foo", subject: "bar qux" };
 
 const headerIsValid = validateHeader(header);
 console.log(headerIsValid); // => true
@@ -332,7 +332,7 @@ console.log(value);
 
 const { error } = validateHeader(
   {
-    type: 'bar',
+    type: "bar",
   },
   true,
 );
@@ -373,20 +373,20 @@ function(header, options)
 #### Examples
 
 ```js
-import { checkHeader } from 'parse-commit-message';
+import { checkHeader } from "parse-commit-message";
 
 try {
-  checkHeader({ type: 'fix' });
+  checkHeader({ type: "fix" });
 } catch (err) {
   console.log(err);
   // => TypeError: header.subject should be non empty string
 }
 
 // throws because can accept only Header objects
-checkHeader('foo bar baz');
+checkHeader("foo bar baz");
 checkHeader(123);
 checkHeader([]);
-checkHeader([{ type: 'foo', subject: 'bar' }]);
+checkHeader([{ type: "foo", subject: "bar" }]);
 ```
 
 _Generated using [jest-runner-docs](https://ghub.now.sh/jest-runner-docs)._
@@ -429,22 +429,22 @@ the `check` methods. It does not do checking and validation._
 #### Examples
 
 ```js
-import dedent from 'dedent';
-import { applyPlugins, plugins, parse, check } from 'parse-commit-message';
+import dedent from "dedent";
+import { applyPlugins, plugins, parse, check } from "parse-commit-message";
 
 const commits = [
-  'fix: bar qux',
+  "fix: bar qux",
   dedent`feat(foo): yea yea
 
   Awesome body here with @some mentions
   resolves #123
 
   BREAKING CHANGE: ouch!`,
-  'chore(ci): updates for ci config',
+  "chore(ci): updates for ci config",
   {
-    header: { type: 'fix', subject: 'Barry White' },
-    body: 'okey dude',
-    foo: 'possible',
+    header: { type: "fix", subject: "Barry White" },
+    body: "okey dude",
+    foo: "possible",
   },
 ];
 
@@ -549,14 +549,14 @@ plugins.
 #### Examples
 
 ```js
-import { mappers, applyPlugins, parse } from 'parse-commit-message';
+import { mappers, applyPlugins, parse } from "parse-commit-message";
 
 console.log(mappers); // => { mentions, increment }
 console.log(mappers.mentions); // => [Function mentions]
 console.log(mappers.increment); // => [Function increment]
 
 const flat = true;
-const parsed = parse('fix: bar', flat);
+const parsed = parse("fix: bar", flat);
 console.log(parsed);
 // => {
 //   header: { type: 'feat', scope: 'cli', subject: 'awesome feature' },
@@ -614,9 +614,9 @@ with `ret` option set to `true`._
 #### Examples
 
 ```js
-import { parseCommit } from 'parse-commit-message';
+import { parseCommit } from "parse-commit-message";
 
-const commitObj = parseCommit('foo: bar qux\n\nokey dude');
+const commitObj = parseCommit("foo: bar qux\n\nokey dude");
 console.log(commitObj);
 // => {
 //   header: { type: 'foo', scope: null, subject: 'bar qux' },
@@ -659,11 +659,11 @@ function(commit, options)
 #### Examples
 
 ```js
-import { stringifyCommit } from 'parse-commit-message';
+import { stringifyCommit } from "parse-commit-message";
 
 const commitStr = stringifyCommit({
-  header: { type: 'foo', subject: 'bar qux' },
-  body: 'okey dude',
+  header: { type: "foo", subject: "bar qux" },
+  body: "okey dude",
 });
 console.log(commitStr); // => 'foo: bar qux\n\nokey dude'
 ```
@@ -701,11 +701,11 @@ function(commit, options)
 #### Examples
 
 ```js
-import { validateCommit } from 'parse-commit-message';
+import { validateCommit } from "parse-commit-message";
 
 const commit = {
-  header: { type: 'foo', subject: 'bar qux' },
-  body: 'okey dude',
+  header: { type: "foo", subject: "bar qux" },
+  body: "okey dude",
 };
 
 const commitIsValid = validateCommit(commit);
@@ -753,19 +753,19 @@ function(commit, options)
 #### Examples
 
 ```js
-import { checkCommit } from 'parse-commit-message';
+import { checkCommit } from "parse-commit-message";
 
 try {
-  checkCommit({ header: { type: 'fix' } });
+  checkCommit({ header: { type: "fix" } });
 } catch (err) {
   console.log(err);
   // => TypeError: header.subject should be non empty string
 }
 
 // throws because can accept only Commit objects
-checkCommit('foo bar baz');
+checkCommit("foo bar baz");
 checkCommit(123);
-checkCommit([{ header: { type: 'foo', subject: 'bar' } }]);
+checkCommit([{ header: { type: "foo", subject: "bar" } }]);
 ```
 
 _Generated using [jest-runner-docs](https://ghub.now.sh/jest-runner-docs)._
@@ -802,9 +802,9 @@ function(commits, options)
 #### Examples
 
 ```js
-import { parse } from 'parse-commit-message';
+import { parse } from "parse-commit-message";
 
-const commits = ['fix(ci): tweaks for @circleci config', 'chore: bar qux'];
+const commits = ["fix(ci): tweaks for @circleci config", "chore: bar qux"];
 const result = parse(commits);
 console.log(result);
 // => [{
@@ -870,7 +870,7 @@ be parsed and validated, and after that turned again to string.
 #### Examples
 
 ```js
-import { parse, stringify } from 'parse-commit-message';
+import { parse, stringify } from "parse-commit-message";
 
 const commitMessage = `feat: awesome yeah
 
@@ -920,27 +920,27 @@ function(commits, options)
 #### Examples
 
 ```js
-import { validate } from 'parse-commit-message';
+import { validate } from "parse-commit-message";
 
-console.log(validate('foo bar qux')); // false
-console.log(validate('foo: bar qux')); // true
-console.log(validate('fix(ci): bar qux')); // true
+console.log(validate("foo bar qux")); // false
+console.log(validate("foo: bar qux")); // true
+console.log(validate("fix(ci): bar qux")); // true
 
-console.log(validate(['a bc cqux', 'foo bar qux'])); // false
+console.log(validate(["a bc cqux", "foo bar qux"])); // false
 
 console.log(validate({ qux: 1 })); // false
-console.log(validate({ header: { type: 'fix' } })); // false
-console.log(validate({ header: { type: 'fix', subject: 'ok' } })); // true
+console.log(validate({ header: { type: "fix" } })); // false
+console.log(validate({ header: { type: "fix", subject: "ok" } })); // true
 
 const commitObject = {
-  header: { type: 'test', subject: 'updating tests' },
-  foo: 'bar',
+  header: { type: "test", subject: "updating tests" },
+  foo: "bar",
   isBreaking: false,
-  body: 'oh ah',
+  body: "oh ah",
 };
 console.log(validate(commitObject)); // true
 
-const result = validate('foo bar qux');
+const result = validate("foo bar qux");
 console.log(result.error);
 // => Error: expect \`commit\` to follow:
 // <type>[optional scope]: <description>
@@ -949,7 +949,7 @@ console.log(result.error);
 //
 // [optional footer]
 
-const res = validate('fix(ci): okey barry');
+const res = validate("fix(ci): okey barry");
 console.log(result.value);
 // => [{
 //   header: { type: 'fix', scope: 'ci', subject: 'okey barry' },
@@ -957,12 +957,12 @@ console.log(result.value);
 //   footer: null,
 // }]
 
-const commit = { header: { type: 'fix' } };
+const commit = { header: { type: "fix" } };
 const { error } = validate(commit);
 console.log(error);
 // => TypeError: header.subject should be non empty string
 
-const commit = { header: { type: 'fix', scope: 123, subject: 'okk' } };
+const commit = { header: { type: "fix", scope: 123, subject: "okk" } };
 const { error } = validate(commit);
 console.log(error);
 // => TypeError: header.scope should be non empty string when given
@@ -1002,10 +1002,10 @@ function(commits, options)
 #### Examples
 
 ```js
-import { check } from 'parse-commit-message';
+import { check } from "parse-commit-message";
 
 try {
-  check({ header: { type: 'fix' } });
+  check({ header: { type: "fix" } });
 } catch (err) {
   console.log(err);
   // => TypeError: header.subject should be non empty string
@@ -1014,7 +1014,7 @@ try {
 // Can also validate/check a strings, array of strings,
 // or even mixed - array of strings and objects
 try {
-  check('fix(): invalid scope, it cannot be empty');
+  check("fix(): invalid scope, it cannot be empty");
 } catch (err) {
   console.log(err);
   // => TypeError: header.scope should be non empty string when given
@@ -1059,7 +1059,7 @@ _See the [.plugins](#plugins) and [.mappers](#mappers) examples._
 #### Examples
 
 ```js
-import { mappers, plugins } from 'parse-commit-message';
+import { mappers, plugins } from "parse-commit-message";
 
 console.log(mappers.increment); // => [Function: incrementPlugin]
 console.log(plugins[1]); // => [Function: incrementPlugin]
