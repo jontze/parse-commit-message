@@ -25,7 +25,10 @@ import { isHeaderType, isNonEmptyString, stringToHeader } from "./utils.js";
  * @param options SharedOptions to control the header regex and case sensitivity
  * @returns A `Header` object like `{ type, scope?, subject }`
  */
-export const parseHeader = (header: string, options: SharedOptions): Header => {
+export const parseHeader = (
+  header: string,
+  options: SharedOptions = {},
+): Header => {
   if (!isNonEmptyString(header)) {
     throw new TypeError("expect `header` to be non empty string");
   }
