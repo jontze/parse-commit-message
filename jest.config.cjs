@@ -4,7 +4,7 @@ module.exports = {
   testEnvironment: "node",
   rootDir: "./",
   coverageDirectory: "<rootDir>/coverage",
-  collectCoverageFrom: ["<rootDir>/test/**/*.ts"],
+  collectCoverageFrom: ["<rootDir>/src/**/*.ts"],
   testPathIgnorePatterns: ["<rootDir>/node_modules"],
   coverageReporters: ["lcov", "html"],
   testMatch: ["<rootDir>/test/**/*.ts"],
