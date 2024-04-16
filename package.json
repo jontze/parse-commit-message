@@ -22,8 +22,8 @@
   "scripts": {
     "ci": "npm run format:check && npm run build && npm run test",
     "build": "tsc",
-    "format": "prettier -c .prettierrc.json --write ./src",
-    "format:check": "prettier -c .prettierrc.json --check ./src",
+    "format": "prettier -c .prettierrc.json --write .",
+    "format:check": "prettier -c .prettierrc.json --check .",
     "test": "jest --passWithNoTests --coverage"
   },
   "devDependencies": {
