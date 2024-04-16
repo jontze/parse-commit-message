@@ -10,9 +10,9 @@
     "url": "https://github.com/jontze/parse-commit-message.git"
   },
   "type": "module",
-  "main": "dist/cjs/index.js",
+  "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
-  "typings": "index.d.ts",
+  "typings": "dist/esm/index.d.ts",
   "files": [
     "dist"
   ],
