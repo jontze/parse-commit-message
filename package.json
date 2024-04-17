@@ -24,6 +24,14 @@
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "typings": "dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js"
+    },
+    "./utils": {
+      "import": "./dist/esm/utils.js"
+    }
+  },
   "files": [
     "dist"
   ],
