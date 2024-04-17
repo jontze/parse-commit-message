@@ -1,5 +1,5 @@
 {
-  "name": "parse-commit-message",
+  "name": "@jontze/parse-commit-message",
   "version": "5.0.0",
   "licenseStart": 2018,
   "license": "MPL-2.0",
