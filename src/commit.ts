@@ -163,21 +163,11 @@ export const checkCommit = (commit: Commit): Commit => {
     throw new TypeError("Header in commit is undefined");
   }
 
-  const isValidBody =
-    "body" in commit && commit.body !== null
-      ? typeof commit.body === "string"
-      : true;
-
-  if (!isValidBody) {
+  if (commit.body != null && typeof commit.body !== "string") {
     throw new TypeError("commit.body should be string when given");
   }
 
-  const isValid =
-    "footer" in commit && commit.footer !== null
-      ? typeof commit.footer === "string"
-      : true;
-
-  if (!isValid) {
+  if (commit.footer != null && typeof commit.footer !== "string") {
     throw new TypeError("commit.footer should be string when given");
   }
 
