@@ -61,4 +61,4 @@ jobs:
       - name: Specify next version
         id: next
         run: |
-          echo "version=$(conventional-versioning -o plain)" >> $GITHUB_OUT
+          echo "version=$(conventional-versioning -o plain)" >> $GITHUB_OUTPUT
