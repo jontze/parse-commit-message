@@ -12,6 +12,8 @@ jobs:
   build:
     name: Build
     uses: ./.github/workflows/test.yaml
+    with:
+      check-version: false
 
   deploy:
     name: Deploy
