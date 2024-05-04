@@ -10,3 +10,32 @@ permissions:
 jobs:
   test:
     uses: ./.github/workflows/test.yaml
+
+  trigger-release:
+    permissions:
+      contents: write
+    name: Next Release
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+      - name: Set Package Version
+        run: |
+          npm version ${{ needs.test.outputs.version }} --no-git-tag-version --allow-same-version
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        id: commit
+        with:
+          commit_message: "chore(version): Bump version to ${{ needs.test.outputs.version }}"
+      - name: Create Tag (if version changed)
+        if: steps.commit.outputs.changes_detected == 'true'
+        run: |
+          git tag v${{ needs.test.outputs.version }}
+          git push origin v${{ needs.test.outputs.version }}
