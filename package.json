@@ -36,7 +36,7 @@
     "dist"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "ci": "npm run format:check && npm run build && npm run test",
@@ -46,11 +46,11 @@
     "test": "jest --passWithNoTests --coverage"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^29.5.14",
     "jest": "^29.7.0",
-    "prettier": "^3.2.5",
-    "ts-jest": "^29.1.2",
-    "typescript": "^5.4.5"
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
   },
   "keywords": [
     "commit message parser",
@@ -69,6 +69,6 @@
     "parser"
   ],
   "dependencies": {
-    "immer": "^10.0.4"
+    "immer": "^10.1.1"
   }
 }
